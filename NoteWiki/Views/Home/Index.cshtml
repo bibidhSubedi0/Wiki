@@ -1,2 +1,9 @@
-﻿<p> This is the Home</p>
+﻿@model List<NoteWiki.Models.NoteBoxModel>
+
+<p> This is the Home</p>
 <p>	All note boxes listed here</p>
+
+@foreach(var n in Model)
+{
+	<a asp-action="Index" asp-controller="NotesList" asp-route-id="@n.NoteBoxGuid">@n.BoxName @n.CreatedAt @n.LastUpdatedAt @n.NoteBoxGuid</a><br />
+}

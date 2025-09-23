@@ -15,32 +15,22 @@ namespace NoteWiki.Controllers
                         ?? throw new Exception("Could not connect to MongoDB collection.");
         }
 
-        // GET: /Note?searchString=...
-        public IActionResult Index(string searchString)
+        public IActionResult Index(Guid noteGuid)
         {
-            if (string.IsNullOrEmpty(searchString))
-            {
-                return View(new List<NoteContentModel>()); // Empty if no search
-            }
-
-            // Fetch notes where NoteName matches search string (case-insensitive)
-            var notes = _content.Find(n => n.NoteName.ToLower().Contains(searchString.ToLower())).ToList();
-            ViewBag.SearchString = searchString;
-            return View(notes);
-        }
-
-        // GET: /Note/Details/{id}
-        public IActionResult Details(Guid id)
-        {
-            var note = _content.Find(n => n.NoteGuid == id).FirstOrDefault();
-            if (note == null) return NotFound();
+            Console.WriteLine(noteGuid);
+            NoteContentModel note = _content.Find(n => n.NoteGuid == noteGuid).FirstOrDefault();
+            if (note == null) return Content("No notes");
+            Console.WriteLine(note.Content);
             return View(note);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> AddTestNote()
+
+
+        [HttpGet("Note/AddTestNote/{noteGuid}")]
+        public async Task<IActionResult> AddTestNote(Guid noteGuid)
         {
-            var newNote = new NoteContentModel(Guid.NewGuid(), "This is a test content 2", "abc");
+            Console.WriteLine($"Route gave me: {noteGuid}");
+            var newNote = new NoteContentModel(noteGuid, "this is some fuckass note from the note guid huhu haha", "Crazy Note");
 
             try
             {
