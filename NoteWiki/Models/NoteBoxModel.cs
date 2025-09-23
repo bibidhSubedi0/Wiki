@@ -1,9 +1,13 @@
-﻿namespace NoteWiki.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace NoteWiki.Models
 {
     public class NoteBoxModel
     {
         public string BoxName { get; set; }
         public Guid UserGuid { get; set; }
+
+        [Key]
         public Guid NoteBoxGuid { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime LastUpdatedAt { get; set; }
