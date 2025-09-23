@@ -36,5 +36,22 @@ namespace NoteWiki.Controllers
             if (note == null) return NotFound();
             return View(note);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> AddTestNote()
+        {
+            var newNote = new NoteContentModel(Guid.NewGuid(), "This is a test content 2", "abc");
+
+            try
+            {
+                await _content.InsertOneAsync(newNote);
+                return Content($"Inserted new test note: {newNote.NoteName}");
+            }
+            catch (Exception ex)
+            {
+                return Content("Error inserting note: " + ex.Message);
+            }
+        }
+
     }
 }

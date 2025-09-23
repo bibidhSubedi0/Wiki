@@ -18,10 +18,11 @@ namespace NoteWiki.Models
         public DateTime CreatedAt { get; set; }  // Timestamp of content creation
         [BsonElement("updatedAt")]
         public DateTime UpdatedAt { get; set; }  // Timestamp of last content update
-        public NoteContentModel(Guid noteGuid, string content)
+        public NoteContentModel(Guid noteGuid, string content, string noteName)
         {
             NoteGuid = noteGuid;
             Content = content;
+            NoteName = noteName;
             CreatedAt = DateTime.Now;
             UpdatedAt = DateTime.Now;
         }
