@@ -1,8 +1,11 @@
-﻿namespace NoteWiki.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace NoteWiki.Models
 {
     public class NoteMetadataModel
     {
 
+        [Key]
         public Guid NoteGuid { get; set; }
         public string NoteName { get; set; }
         public Guid NoteBoxGuid { get; set; }
