@@ -19,6 +19,7 @@ namespace NoteWiki.Controllers
         public IActionResult Index(Guid id)
         {
             // Error handling for noteBox to be null
+            Console.WriteLine($"xxxx dsfasdf {id}");
             NoteBoxModel? noteBox = _sqlContext.NoteBoxes.Where(nb => nb.NoteBoxGuid == id).FirstOrDefault();
             List<NoteMetadataModel> notes = _sqlContext.NoteMetadata.Where(nd => nd.NoteBoxGuid == id).ToList();
             return View(new Tuple<NoteBoxModel, List<NoteMetadataModel>>(noteBox, notes));

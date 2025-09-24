@@ -5,7 +5,7 @@
 
 @foreach (var note in Model.Item2)
 {
-    <a asp-action="Index" asp-controller="Note" asp-route-noteGuid="@note.NoteGuid">
+    <a asp-action="Index" asp-controller="Note" asp-route-noteGuid="@note.NoteGuid" asp-route-noteBoxGuid="@Model.Item1.NoteBoxGuid">
         @note.NoteName @note.NoteGuid @note.CreatedAt @note.UpdatedAt
     </a>
     <br />
@@ -21,3 +21,4 @@
 <a asp-action="Index" asp-controller="Home">
     Go Home
 </a>
+

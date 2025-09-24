@@ -18,11 +18,12 @@ namespace NoteWiki.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index(Guid noteGuid)
+        public IActionResult Index(Guid noteGuid, Guid noteBoxGuid)
         {
             // Need error handling here as well
             NoteContentModel? note = _mongoContext.Database?.GetCollection<NoteContentModel>("notes").Find(n => n.NoteGuid == noteGuid).FirstOrDefault();
-            
+            ViewBag.NoteGuid = noteGuid;
+            ViewBag.NoteBoxGuid = noteBoxGuid;
             return View(note);
 
         }
@@ -76,6 +77,20 @@ namespace NoteWiki.Controllers
             }
 
             return RedirectToAction("Index", new { noteGuid = updatedNote.NoteGuid });
+        }
+
+
+
+        public IActionResult DeleteNote( Guid NoteGuid, Guid NoteBoxGuid)
+        {
+            Console.WriteLine($"xxx {NoteGuid}");
+            _mongoContext.Database?.GetCollection<NoteContentModel>("notes").DeleteOne<NoteContentModel>(c=>c.NoteGuid== NoteGuid);
+            var metadata = _SqlContext.NoteMetadata.Where(n => n.NoteGuid == NoteGuid).FirstOrDefault();
+            _SqlContext.NoteMetadata.Remove(metadata);
+            _SqlContext.SaveChanges();
+            return RedirectToAction("Index", "NotesList", new { id = NoteBoxGuid });
+
+
         }
     }
 }

@@ -10,6 +10,9 @@
         </div>
         <button type="button" id="editBtn">Edit</button>
         <button type="button" onclick="window.history.back()">Back</button>
+        <a asp-action="DeleteNote" asp-controller="Note" asp-route-NoteGuid="@Model.NoteGuid" asp-route-NoteBoxGuid="@ViewBag.NoteBoxGuid">
+            Delete This note
+        </a>
     </div>
 
     <!-- Editing Mode (hidden by default) -->
