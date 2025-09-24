@@ -7,23 +7,26 @@ namespace NoteWiki.Controllers
 {
     public class NoteController : Controller
     {
-        private readonly IMongoCollection<NoteContentModel> _context;
-
+        private readonly MongoContext _mongoContext;
         private readonly AppDbContext _SqlContext;
+
 
         public NoteController(MongoContext mongoContext, AppDbContext sqlContext)
         {
-            _context = mongoContext.Database?.GetCollection<NoteContentModel>("notes")
-                        ?? throw new Exception("Could not connect to MongoDB collection.");
+            _mongoContext = mongoContext;
             _SqlContext = sqlContext;
         }
 
+        [HttpGet]
         public IActionResult Index(Guid noteGuid)
         {
-            NoteContentModel note = _context.Find(n => n.NoteGuid == noteGuid).FirstOrDefault();
-            if (note == null) return Content("No notes");
+            // Need error handling here as well
+            NoteContentModel? note = _mongoContext.Database?.GetCollection<NoteContentModel>("notes").Find(n => n.NoteGuid == noteGuid).FirstOrDefault();
+            
             return View(note);
+
         }
+
 
         [HttpGet]
         public IActionResult Create(Guid noteBoxGuid)
@@ -32,6 +35,7 @@ namespace NoteWiki.Controllers
             return View();
         }
 
+
         [HttpPost]
         public IActionResult Create(NoteContentModel notedata, Guid noteBoxGuid) {
             if (!ModelState.IsValid)
@@ -39,45 +43,39 @@ namespace NoteWiki.Controllers
                 return RedirectToAction("Index", "NoteList");
             }
             notedata.NoteGuid = Guid.NewGuid();
-            notedata.CreatedAt = DateTime.Now;
-            notedata.UpdatedAt = DateTime.Now;
+            notedata.CreatedAt= notedata.UpdatedAt = DateTime.Now;
 
-            NoteMetadataModel metadata = new NoteMetadataModel();
+            NoteMetadataModel metadata = new NoteMetadataModel(notedata.NoteName,noteBoxGuid);
             metadata.NoteGuid = notedata.NoteGuid;
-            metadata.NoteBoxGuid = noteBoxGuid;
-            metadata.UpdatedAt = DateTime.Now;
-            metadata.CreatedAt = DateTime.Now;
-            metadata.NoteName = notedata.NoteName;
+            metadata.UpdatedAt = metadata.CreatedAt = DateTime.Now;
             
-            
-
-            _context.InsertOne(notedata);
+            _mongoContext.Database?.GetCollection<NoteContentModel>("notes").InsertOne(notedata);
             _SqlContext.NoteMetadata.Add(metadata);
             _SqlContext.SaveChanges();
 
-
-
             return RedirectToAction("Index", "NotesList", new { id = metadata.NoteBoxGuid });
         }
-        
 
-
-
-        [HttpGet("Note/AddTestNote/{noteGuid}")]
-        public async Task<IActionResult> AddTestNote(Guid noteGuid)
+        [HttpPost]
+        public IActionResult Edit(NoteContentModel updatedNote)
         {
-            var newNote = new NoteContentModel(noteGuid, "this is some fuckass note from the note guid huhu haha", "Crazy Note");
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("Index", new { noteGuid = updatedNote.NoteGuid });
+            }
 
-            try
+            var notesCollection = _mongoContext.Database.GetCollection<NoteContentModel>("notes");
+            updatedNote.UpdatedAt = DateTime.Now;
+            notesCollection.ReplaceOne(n => n.NoteGuid == updatedNote.NoteGuid, updatedNote);
+            var metadata = _SqlContext.NoteMetadata.FirstOrDefault(n => n.NoteGuid == updatedNote.NoteGuid);
+            if (metadata != null)
             {
-                await _context.InsertOneAsync(newNote);
-                return Content($"Inserted new test note: {newNote.NoteName}");
+                metadata.NoteName = updatedNote.NoteName;
+                metadata.UpdatedAt = DateTime.Now;
+                _SqlContext.SaveChanges();
             }
-            catch (Exception ex)
-            {
-                return Content("Error inserting note: " + ex.Message);
-            }
+
+            return RedirectToAction("Index", new { noteGuid = updatedNote.NoteGuid });
         }
-
     }
 }
