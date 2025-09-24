@@ -23,9 +23,15 @@ namespace NoteWiki.Controllers
             var notes = _context.NoteMetadata.Where(nd => nd.NoteBoxGuid == id).ToList();
 
             //if (noteBox == null) return NotFound();
+
             var t = new Tuple<NoteBoxModel,List<NoteMetadataModel>> (noteBox,notes);
 
             return View(t);
+        }
+
+        public IActionResult Create(Guid NoteBoxGuid)
+        {
+            return RedirectToAction("Create", "Note", new { noteBoxGuid = NoteBoxGuid});
         }
 
 

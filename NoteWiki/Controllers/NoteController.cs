@@ -7,34 +7,70 @@ namespace NoteWiki.Controllers
 {
     public class NoteController : Controller
     {
-        private readonly IMongoCollection<NoteContentModel> _content;
+        private readonly IMongoCollection<NoteContentModel> _context;
 
-        public NoteController(MongoContext mongoContext)
+        private readonly AppDbContext _SqlContext;
+
+        public NoteController(MongoContext mongoContext, AppDbContext sqlContext)
         {
-            _content = mongoContext.Database?.GetCollection<NoteContentModel>("notes")
+            _context = mongoContext.Database?.GetCollection<NoteContentModel>("notes")
                         ?? throw new Exception("Could not connect to MongoDB collection.");
+            _SqlContext = sqlContext;
         }
 
         public IActionResult Index(Guid noteGuid)
         {
-            Console.WriteLine(noteGuid);
-            NoteContentModel note = _content.Find(n => n.NoteGuid == noteGuid).FirstOrDefault();
+            NoteContentModel note = _context.Find(n => n.NoteGuid == noteGuid).FirstOrDefault();
             if (note == null) return Content("No notes");
-            Console.WriteLine(note.Content);
             return View(note);
         }
+
+        [HttpGet]
+        public IActionResult Create(Guid noteBoxGuid)
+        {
+            ViewBag.NoteBoxGuid = noteBoxGuid;
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Create(NoteContentModel notedata, Guid noteBoxGuid) {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("Index", "NoteList");
+            }
+            notedata.NoteGuid = Guid.NewGuid();
+            notedata.CreatedAt = DateTime.Now;
+            notedata.UpdatedAt = DateTime.Now;
+
+            NoteMetadataModel metadata = new NoteMetadataModel();
+            metadata.NoteGuid = notedata.NoteGuid;
+            metadata.NoteBoxGuid = noteBoxGuid;
+            metadata.UpdatedAt = DateTime.Now;
+            metadata.CreatedAt = DateTime.Now;
+            metadata.NoteName = notedata.NoteName;
+            
+            
+
+            _context.InsertOne(notedata);
+            _SqlContext.NoteMetadata.Add(metadata);
+            _SqlContext.SaveChanges();
+
+
+
+            return RedirectToAction("Index", "NotesList", new { id = metadata.NoteBoxGuid });
+        }
+        
 
 
 
         [HttpGet("Note/AddTestNote/{noteGuid}")]
         public async Task<IActionResult> AddTestNote(Guid noteGuid)
         {
-            Console.WriteLine($"Route gave me: {noteGuid}");
             var newNote = new NoteContentModel(noteGuid, "this is some fuckass note from the note guid huhu haha", "Crazy Note");
 
             try
             {
-                await _content.InsertOneAsync(newNote);
+                await _context.InsertOneAsync(newNote);
                 return Content($"Inserted new test note: {newNote.NoteName}");
             }
             catch (Exception ex)

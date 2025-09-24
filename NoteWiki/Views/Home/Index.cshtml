@@ -7,3 +7,8 @@
 {
 	<a asp-action="Index" asp-controller="NotesList" asp-route-id="@n.NoteBoxGuid">@n.BoxName @n.CreatedAt @n.LastUpdatedAt @n.NoteBoxGuid</a><br />
 }
+
+<form asp-action="Create" asp-controller="Home" method="post">
+	<input type="text" name="BoxName" placeholder="Enter NoteBox title" required />
+	<button type="submit">Add</button>
+</form>

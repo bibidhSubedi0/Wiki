@@ -8,5 +8,16 @@
     <a asp-action="Index" asp-controller="Note" asp-route-noteGuid="@note.NoteGuid">
         @note.NoteName @note.NoteGuid @note.CreatedAt @note.UpdatedAt
     </a>
+    <br />
 
 }   
+
+
+<br />
+<a asp-action="Create" asp-route-noteBoxGuid="@Model.Item1.NoteBoxGuid">
+    Create a new note
+</a>
+<br />
+<a asp-action="Index" asp-controller="Home">
+    Go Home
+</a>

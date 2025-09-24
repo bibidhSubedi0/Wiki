@@ -1,0 +1,7 @@
+﻿<form asp-action="Create" asp-controller="Note" method="post">
+    <input type="hidden" name="noteBoxGuid" value="@ViewBag.NoteBoxGuid" />
+
+    <input type="text" name="NoteName" placeholder="Enter Note title" required />
+    <input type="text" name="Content" placeholder="Enter the note" />
+    <button type="submit">Add</button>
+</form>
