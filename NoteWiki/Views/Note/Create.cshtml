@@ -1,19 +1,124 @@
-﻿<form asp-action="Create" asp-controller="Note" method="post">
-    <input type="hidden" name="noteBoxGuid" value="@ViewBag.NoteBoxGuid" />
-    <input type="text" name="NoteName" placeholder="Enter Note title" required />
+﻿@model NoteWiki.Models.NoteContentModel
 
-    <div id="editor"></div>
-    <input type="hidden" name="Content" id="hiddenContent" />
+@{
+    ViewData["Title"] = "Create New Note";
+}
 
-    <button type="submit">Add</button>
-</form>
-
-<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<style>
+    .ql-toolbar.ql-snow {
+        background: var(--bg-tertiary);
+        border: 1px solid var(--border-color);
+        border-bottom: none;
+        border-radius: 8px 8px 0 0;
+    }
 
+    .ql-container.ql-snow {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-top: none;
+        border-radius: 0 0 8px 8px;
+        color: var(--text-primary);
+        font-size: 1rem;
+        min-height: 400px;
+    }
+
+    .ql-editor {
+        color: var(--text-primary);
+    }
+
+        .ql-editor::before {
+            color: var(--text-muted);
+        }
+
+    .ql-toolbar .ql-stroke {
+        stroke: var(--text-secondary);
+    }
+
+    .ql-toolbar .ql-fill {
+        fill: var(--text-secondary);
+    }
+
+    .ql-toolbar button:hover .ql-stroke {
+        stroke: var(--accent);
+    }
+
+    .ql-toolbar button:hover .ql-fill {
+        fill: var(--accent);
+    }
+
+    .ql-toolbar button.ql-active .ql-stroke {
+        stroke: var(--accent);
+    }
+
+    .ql-toolbar button.ql-active .ql-fill {
+        fill: var(--accent);
+    }
+</style>
+
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb" style="background: none; padding: 0;">
+        <li class="breadcrumb-item">
+            <a asp-action="Index" asp-controller="Home" style="color: var(--text-muted);">
+                Home
+            </a>
+        </li>
+        <li class="breadcrumb-item">
+            <a onclick="window.history.back(); return false;" href="#" style="color: var(--text-muted);">
+                NoteBox
+            </a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page" style="color: var(--text-secondary);">
+            New Note
+        </li>
+    </ol>
+</nav>
+
+<!-- Header -->
+<div class="mb-4">
+    <h1 class="h2 mb-2" style="color: var(--text-primary); font-weight: 600;">
+        Create New Note
+    </h1>
+    <p class="text-secondary mb-0">Add a new note to your collection</p>
+</div>
+
+<!-- Create Note Form -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <form asp-action="Create" asp-controller="Note" method="post">
+                    <input type="hidden" name="noteBoxGuid" value="@ViewBag.NoteBoxGuid" />
+                        <div class="mb-3">
+                            <label asp-for="NoteName" class="form-label" style="color: var(--text-primary);">Title</label>
+                            <input asp-for="NoteName" class="form-control" />
+                            <span asp-validation-for="NoteName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Content" class="form-label" style="color: var(--text-primary);">Content</label>
+                            <div id="editor"></div>
+                            <textarea asp-for="Content" id="Content" name="Content" hidden></textarea>
+                            <span asp-validation-for="Content" class="text-danger"></span>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Save Note</button>
+                        <a asp-action="Index" asp-controller="Note" class="btn btn-secondary">Cancel</a>
+                    </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
 <script>
-    var quill = new Quill('#editor', { theme: 'snow' });
-    document.querySelector('form').onsubmit = function() {
-        document.querySelector('#hiddenContent').value = quill.root.innerHTML;
+    var quill = new Quill('#editor', {
+        theme: 'snow'
+    });
+
+    document.querySelector("form").onsubmit = function () {
+        document.querySelector("#Content").value = quill.root.innerHTML;
     };
 </script>

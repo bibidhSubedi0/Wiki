@@ -39,6 +39,8 @@ namespace NoteWiki.Controllers
 
         [HttpPost]
         public IActionResult Create(NoteContentModel notedata, Guid noteBoxGuid) {
+
+            Console.WriteLine($"not box guid {noteBoxGuid}");
             if (!ModelState.IsValid)
             {
                 return RedirectToAction("Index", "NoteList");
