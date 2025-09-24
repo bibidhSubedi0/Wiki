@@ -1,6 +1,92 @@
 ﻿@{
-    ViewData["Title"] = "Landing Page";
+    ViewData["Title"] = "Welcome";
 }
 
-<p>Login with Google</p>
-@* Add a button later *@
+<div class="row justify-content-center align-items-center" style="min-height: 60vh;">
+    <div class="col-md-6 col-lg-5">
+        <div class="text-center mb-5">
+            <div class="mb-4">
+                <svg width="80" height="80" fill="var(--accent)" viewBox="0 0 16 16">
+                    <path d="M4 1h5v1H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V5h1v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2z" />
+                    <path d="M9 4.5V1l5 5h-3.5A1.5 1.5 0 0 1 9 4.5z" />
+                </svg>
+            </div>
+            <h1 class="h2 mb-3" style="color: var(--text-primary); font-weight: 700;">
+                Welcome to NoteWiki
+            </h1>
+            <p class="text-secondary mb-4" style="font-size: 1.1rem;">
+                Your personal knowledge management system. Organize, write, and discover your ideas.
+            </p>
+        </div>
+
+        <div class="card">
+            <div class="card-body text-center p-5">
+                <h3 class="h4 mb-4" style="color: var(--text-primary);">Get Started</h3>
+
+                <div class="mb-4">
+                    <div class="d-flex justify-content-around text-center mb-3">
+                        <div>
+                            <div class="mb-2">
+                                <svg width="32" height="32" fill="var(--accent)" viewBox="0 0 16 16">
+                                    <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z" />
+                                </svg>
+                            </div>
+                            <small class="text-muted">Organize</small>
+                        </div>
+                        <div>
+                            <div class="mb-2">
+                                <svg width="32" height="32" fill="var(--success)" viewBox="0 0 16 16">
+                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
+                                </svg>
+                            </div>
+                            <small class="text-muted">Write</small>
+                        </div>
+                        <div>
+                            <div class="mb-2">
+                                <svg width="32" height="32" fill="var(--warning)" viewBox="0 0 16 16">
+                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                                </svg>
+                            </div>
+                            <small class="text-muted">Discover</small>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary btn-lg w-100 mb-3" style="font-size: 1.1rem; padding: 0.875rem 2rem;">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16" style="margin-right: 0.5rem;">
+                        <path d="M15.545 6.558a9.42 9.42 0 0 1 .139 1.626c0 2.434-.87 4.492-2.384 5.885h.002C11.978 15.292 10.158 16 8 16A8 8 0 1 1 8 0a7.689 7.689 0 0 1 5.352 2.082l-2.284 2.284A4.347 4.347 0 0 0 8 3.166c-2.087 0-3.86 1.408-4.492 3.304a4.792 4.792 0 0 0 0 3.063h.003c.635 1.893 2.405 3.301 4.492 3.301 1.078 0 2.004-.276 2.722-.764h-.003a3.702 3.702 0 0 0 1.599-2.431H8v-3.08h7.545z" />
+                    </svg>
+                    Continue with Google
+                </button>
+
+                <p class="text-muted small mb-0">
+                    Secure authentication powered by Google
+                </p>
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <div class="row text-center">
+                <div class="col-4">
+                    <div class="text-muted small">
+                        <strong style="color: var(--text-secondary);">Secure</strong><br>
+                        End-to-end encryption
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="text-muted small">
+                        <strong style="color: var(--text-secondary);">Fast</strong><br>
+                        Lightning-quick search
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="text-muted small">
+                        <strong style="color: var(--text-secondary);">Organized</strong><br>
+                        Smart categorization
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
