@@ -1,2 +1,24 @@
-﻿<p> This is the Notes List</p>
-<p>	All notes are listed here</p>
+﻿@model Tuple<NoteBoxModel,List<NoteMetadataModel>>
+
+<h2>@Model.Item1.BoxName</h2>
+<p>All notes inside this box:</p>
+
+@foreach (var note in Model.Item2)
+{
+    <a asp-action="Index" asp-controller="Note" asp-route-noteGuid="@note.NoteGuid" asp-route-noteBoxGuid="@Model.Item1.NoteBoxGuid">
+        @note.NoteName @note.NoteGuid @note.CreatedAt @note.UpdatedAt
+    </a>
+    <br />
+
+}   
+
+
+<br />
+<a asp-action="Create" asp-route-noteBoxGuid="@Model.Item1.NoteBoxGuid">
+    Create a new note
+</a>
+<br />
+<a asp-action="Index" asp-controller="Home">
+    Go Home
+</a>
+

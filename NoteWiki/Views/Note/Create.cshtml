@@ -1,0 +1,19 @@
+﻿<form asp-action="Create" asp-controller="Note" method="post">
+    <input type="hidden" name="noteBoxGuid" value="@ViewBag.NoteBoxGuid" />
+    <input type="text" name="NoteName" placeholder="Enter Note title" required />
+
+    <div id="editor"></div>
+    <input type="hidden" name="Content" id="hiddenContent" />
+
+    <button type="submit">Add</button>
+</form>
+
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+
+<script>
+    var quill = new Quill('#editor', { theme: 'snow' });
+    document.querySelector('form').onsubmit = function() {
+        document.querySelector('#hiddenContent').value = quill.root.innerHTML;
+    };
+</script>

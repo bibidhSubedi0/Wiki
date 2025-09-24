@@ -7,51 +7,90 @@ namespace NoteWiki.Controllers
 {
     public class NoteController : Controller
     {
-        private readonly IMongoCollection<NoteContentModel> _content;
+        private readonly MongoContext _mongoContext;
+        private readonly AppDbContext _SqlContext;
 
-        public NoteController(MongoContext mongoContext)
+
+        public NoteController(MongoContext mongoContext, AppDbContext sqlContext)
         {
-            _content = mongoContext.Database?.GetCollection<NoteContentModel>("notes")
-                        ?? throw new Exception("Could not connect to MongoDB collection.");
-        }
-
-        // GET: /Note?searchString=...
-        public IActionResult Index(string searchString)
-        {
-            if (string.IsNullOrEmpty(searchString))
-            {
-                return View(new List<NoteContentModel>()); // Empty if no search
-            }
-
-            // Fetch notes where NoteName matches search string (case-insensitive)
-            var notes = _content.Find(n => n.NoteName.ToLower().Contains(searchString.ToLower())).ToList();
-            ViewBag.SearchString = searchString;
-            return View(notes);
-        }
-
-        // GET: /Note/Details/{id}
-        public IActionResult Details(Guid id)
-        {
-            var note = _content.Find(n => n.NoteGuid == id).FirstOrDefault();
-            if (note == null) return NotFound();
-            return View(note);
+            _mongoContext = mongoContext;
+            _SqlContext = sqlContext;
         }
 
         [HttpGet]
-        public async Task<IActionResult> AddTestNote()
+        public IActionResult Index(Guid noteGuid, Guid noteBoxGuid)
         {
-            var newNote = new NoteContentModel(Guid.NewGuid(), "This is a test content 2", "abc");
+            // Need error handling here as well
+            NoteContentModel? note = _mongoContext.Database?.GetCollection<NoteContentModel>("notes").Find(n => n.NoteGuid == noteGuid).FirstOrDefault();
+            ViewBag.NoteGuid = noteGuid;
+            ViewBag.NoteBoxGuid = noteBoxGuid;
+            return View(note);
 
-            try
-            {
-                await _content.InsertOneAsync(newNote);
-                return Content($"Inserted new test note: {newNote.NoteName}");
-            }
-            catch (Exception ex)
-            {
-                return Content("Error inserting note: " + ex.Message);
-            }
         }
 
+
+        [HttpGet]
+        public IActionResult Create(Guid noteBoxGuid)
+        {
+            ViewBag.NoteBoxGuid = noteBoxGuid;
+            return View();
+        }
+
+
+        [HttpPost]
+        public IActionResult Create(NoteContentModel notedata, Guid noteBoxGuid) {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("Index", "NoteList");
+            }
+            notedata.NoteGuid = Guid.NewGuid();
+            notedata.CreatedAt= notedata.UpdatedAt = DateTime.Now;
+
+            NoteMetadataModel metadata = new NoteMetadataModel(notedata.NoteName,noteBoxGuid);
+            metadata.NoteGuid = notedata.NoteGuid;
+            metadata.UpdatedAt = metadata.CreatedAt = DateTime.Now;
+            
+            _mongoContext.Database?.GetCollection<NoteContentModel>("notes").InsertOne(notedata);
+            _SqlContext.NoteMetadata.Add(metadata);
+            _SqlContext.SaveChanges();
+
+            return RedirectToAction("Index", "NotesList", new { id = metadata.NoteBoxGuid });
+        }
+
+        [HttpPost]
+        public IActionResult Edit(NoteContentModel updatedNote)
+        {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("Index", new { noteGuid = updatedNote.NoteGuid });
+            }
+
+            var notesCollection = _mongoContext.Database.GetCollection<NoteContentModel>("notes");
+            updatedNote.UpdatedAt = DateTime.Now;
+            notesCollection.ReplaceOne(n => n.NoteGuid == updatedNote.NoteGuid, updatedNote);
+            var metadata = _SqlContext.NoteMetadata.FirstOrDefault(n => n.NoteGuid == updatedNote.NoteGuid);
+            if (metadata != null)
+            {
+                metadata.NoteName = updatedNote.NoteName;
+                metadata.UpdatedAt = DateTime.Now;
+                _SqlContext.SaveChanges();
+            }
+
+            return RedirectToAction("Index", new { noteGuid = updatedNote.NoteGuid });
+        }
+
+
+
+        public IActionResult DeleteNote( Guid NoteGuid, Guid NoteBoxGuid)
+        {
+            Console.WriteLine($"xxx {NoteGuid}");
+            _mongoContext.Database?.GetCollection<NoteContentModel>("notes").DeleteOne<NoteContentModel>(c=>c.NoteGuid== NoteGuid);
+            var metadata = _SqlContext.NoteMetadata.Where(n => n.NoteGuid == NoteGuid).FirstOrDefault();
+            _SqlContext.NoteMetadata.Remove(metadata);
+            _SqlContext.SaveChanges();
+            return RedirectToAction("Index", "NotesList", new { id = NoteBoxGuid });
+
+
+        }
     }
 }

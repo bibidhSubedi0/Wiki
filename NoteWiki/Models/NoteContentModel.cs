@@ -26,6 +26,7 @@ namespace NoteWiki.Models
             CreatedAt = DateTime.Now;
             UpdatedAt = DateTime.Now;
         }
+        public NoteContentModel() { }
     }
 }
 
