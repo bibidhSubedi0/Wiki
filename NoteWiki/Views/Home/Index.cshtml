@@ -6,6 +6,8 @@
 @foreach(var n in Model)
 {
 	<a asp-action="Index" asp-controller="NotesList" asp-route-id="@n.NoteBoxGuid">@n.BoxName @n.CreatedAt @n.LastUpdatedAt @n.NoteBoxGuid</a><br />
+	<a asp-action="Options" asp-controller="Home" asp-route-id="@n.NoteBoxGuid">Options</a>
+	<br />
 }
 
 <form asp-action="Create" asp-controller="Home" method="post">
