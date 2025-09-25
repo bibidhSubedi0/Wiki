@@ -1,0 +1,91 @@
+﻿@{
+    ViewData["Title"] = "Welcome";
+}
+
+<div class="row justify-content-center align-items-center" style="min-height: 60vh;">
+    <div class="col-md-6 col-lg-5">
+        <div class="card">
+            <div class="card-body text-center p-5">
+                <!-- Success Animation -->
+                <div class="mb-4">
+                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle animate-success"
+                         style="width: 80px; height: 80px; background: var(--success); animation: pulse 1.5s infinite;">
+                        <svg width="40" height="40" fill="white" viewBox="0 0 16 16">
+                            <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.061L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z" />
+                        </svg>
+                    </div>
+                </div>
+
+                <h2 class="h3 mb-3" style="color: var(--text-primary); font-weight: 600;">
+                    Welcome, @ViewBag.Name! 🎉
+                </h2>
+
+                <p class="text-secondary mb-3">
+                    You've successfully signed in with Google
+                </p>
+
+                <!-- User Info -->
+                <div class="mb-4 p-3 rounded" style="background: var(--bg-tertiary); border: 1px solid var(--border-color);">
+                    <div class="d-flex align-items-center justify-content-center mb-2">
+                        <svg width="16" height="16" fill="var(--text-muted)" viewBox="0 0 16 16" style="margin-right: 0.5rem;">
+                            <path d="M2 2A2 2 0 0 0 0 4v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H2ZM1 4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v.217l-7 4.2-7-4.2V4Zm0 2.853 6.5 3.9a.5.5 0 0 0 .5 0l6.5-3.9V12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6.853Z" />
+                        </svg>
+                        <small class="text-muted">@ViewBag.Email</small>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-center">
+                        <svg width="16" height="16" fill="var(--text-muted)" viewBox="0 0 16 16" style="margin-right: 0.5rem;">
+                            <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z" />
+                        </svg>
+                        <small class="text-muted">@ViewBag.Name</small>
+                    </div>
+                </div>
+
+                <!-- Auto-redirect message -->
+                <div class="mb-4">
+                    <div class="d-flex align-items-center justify-content-center text-muted">
+                        <div class="spinner-border spinner-border-sm me-2" role="status" style="width: 16px; height: 16px; border-color: var(--accent); border-right-color: transparent;">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <small>Redirecting to your notes in <span id="countdown">2</span> seconds...</small>
+                    </div>
+                </div>
+
+                <!-- Manual navigation -->
+                <div class="d-grid gap-2">
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-primary">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="margin-right: 0.25rem;">
+                            <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z" />
+                        </svg>
+                        Continue to NoteBoxes
+                    </a>
+                    <a asp-controller="Account" asp-action="Logout" class="btn btn-secondary btn-sm">
+                        <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16" style="margin-right: 0.25rem;">
+                            <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z" />
+                            <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z" />
+                        </svg>
+                        Sign Out
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    // Auto-redirect countdown and redirect
+    document.addEventListener('DOMContentLoaded', function() {
+        let countdown = 2;
+        const countdownElement = document.getElementById('countdown');
+
+        const timer = setInterval(function() {
+            countdown--;
+            countdownElement.textContent = countdown;
+
+            if (countdown <= 0) {
+                clearInterval(timer);
+                window.location.href = '@Url.Action("Index", "Home")';
+            }
+        }, 1000);
+    });
+</script>

@@ -9,15 +9,15 @@ namespace NoteWiki.Models
 
         [BsonId]
         [BsonRepresentation(BsonType.String)]
-        public Guid NoteGuid { get; set; }  // Unique identifier for the note
+        public Guid NoteGuid { get; set; }
         [BsonElement("NoteName")]
         public string NoteName { get; set; }
         [BsonElement("content")]
-        public string Content { get; set; }  // The actual content of the note
+        public string Content { get; set; }
         [BsonElement("createdAt")]
-        public DateTime CreatedAt { get; set; }  // Timestamp of content creation
+        public DateTime CreatedAt { get; set; }
         [BsonElement("updatedAt")]
-        public DateTime UpdatedAt { get; set; }  // Timestamp of last content update
+        public DateTime UpdatedAt { get; set; } 
         public NoteContentModel(Guid noteGuid, string content, string noteName)
         {
             NoteGuid = noteGuid;

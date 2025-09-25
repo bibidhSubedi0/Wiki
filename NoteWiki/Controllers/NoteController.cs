@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using NoteWiki.Data;
 using NoteWiki.Models;
 
 namespace NoteWiki.Controllers
 {
+    [Authorize]
     public class NoteController : Controller
     {
         private readonly MongoContext _mongoContext;
@@ -39,8 +41,6 @@ namespace NoteWiki.Controllers
 
         [HttpPost]
         public IActionResult Create(NoteContentModel notedata, Guid noteBoxGuid) {
-
-            Console.WriteLine($"not box guid {noteBoxGuid}");
             if (!ModelState.IsValid)
             {
                 return RedirectToAction("Index", "NoteList");
@@ -85,7 +85,6 @@ namespace NoteWiki.Controllers
 
         public IActionResult DeleteNote( Guid NoteGuid, Guid NoteBoxGuid)
         {
-            Console.WriteLine($"xxx {NoteGuid}");
             _mongoContext.Database?.GetCollection<NoteContentModel>("notes").DeleteOne<NoteContentModel>(c=>c.NoteGuid== NoteGuid);
             var metadata = _SqlContext.NoteMetadata.Where(n => n.NoteGuid == NoteGuid).FirstOrDefault();
             _SqlContext.NoteMetadata.Remove(metadata);

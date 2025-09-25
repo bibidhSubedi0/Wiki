@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
@@ -7,20 +8,17 @@ using NoteWiki.Models;
 
 namespace NoteWiki.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly AppDbContext _sqlContext;
         private readonly MongoContext _mongoContext;
 
 
-        //protected Guid GetUserGuid(AppDbContext context)
-        //{
-        //    var email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-        //    return _sqlContext.Users.FirstOrDefault(c => c.Email == email)?.UserID ?? throw new Exception("User not found");
-        //}
-        protected Guid GetUserGuid(string email, AppDbContext context)
+        protected Guid GetUserGuid(AppDbContext context)
         {
-            return _sqlContext.Users.FirstOrDefault(c => c.Email == email)?.UserID??throw new Exception("User not found");
+            var email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+            return _sqlContext.Users.FirstOrDefault(c => c.Email == email)?.UserID ?? throw new Exception($"User not found {email}");
         }
 
 
@@ -33,9 +31,10 @@ namespace NoteWiki.Controllers
 
         public IActionResult Index()
         {
-            var noteboxes = _sqlContext.NoteBoxes.ToList();
+            var noteboxes = _sqlContext.NoteBoxes.Where(nb => nb.UserGuid == GetUserGuid(_sqlContext)).ToList();
             return View(noteboxes);
         }
+
 
         [HttpPost]
         public IActionResult Create(NoteBoxModel noteBox)
@@ -50,14 +49,13 @@ namespace NoteWiki.Controllers
             noteBox.LastUpdatedAt = DateTime.Now;
 
             // Will need error handling here
-            //var email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-            var email = "hello@gmail.com";
-            noteBox.UserGuid = GetUserGuid(email, _sqlContext);
+            noteBox.UserGuid = GetUserGuid(_sqlContext);
             
             _sqlContext.NoteBoxes.Add(noteBox);
             _sqlContext.SaveChanges();
             return RedirectToActionPermanent("Index", "Home");
         }
+
 
 
         public IActionResult Options(Guid id)
